@@ -2,6 +2,16 @@
 #define NEURALNET_H
 
 #define DEFITER 10000
+#define LEN_DATA 3
+#define NUM_DATA_SETS 4
+
+///generate a list of random numbers
+///param: synapse: list
+void generate_synapse1(double synapse[]);
+
+///generate table of random values between -1 and 1
+///param: size: depth of table, synapse: table of values
+void generate_synapse0(int size, double synapse[][size]);
 
 ///nonlinearity derivative to test against
 ///the neural nets confidence
