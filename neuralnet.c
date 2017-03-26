@@ -13,6 +13,10 @@ double nonlinearity(int x){
     return 1/(1+exp(-x));
 }
 
+double nonlinearityprime(int x){
+    return x*(1-x);
+}
+
 void analyze(int iterations, int size, int data[][size], int solution[]){
 
 }
