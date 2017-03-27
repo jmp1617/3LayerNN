@@ -18,6 +18,14 @@ void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]){
     }
 }
 
+void vector_matrix(int size, double matrix[][size], double vector[], double newvec[]){
+    for(int row=0;row<NUM_DATA_SETS;row++){
+        for(int col=0;col<NUM_DATA_SETS;col++){
+            newvec[row]+=matrix[row][col]*vector[row];
+        }
+    }
+} 
+
 void matrix_mult(int size1, int matrix1[][size1], int size2, double matrix2[][size2], double result[][size2]){
     for(int row=0;row<NUM_DATA_SETS;row++){
         for(int col=0;col<NUM_DATA_SETS;col++){
@@ -44,12 +52,26 @@ void generate_synapse0(int size, double synapse[][size]){
     }
 }
 
-double nonlinearity(int x){
-    return 1/(1+exp(-x));
+void nonlinearity(int size, double table[][size]){
+    for(int row=0;row<NUM_DATA_SETS;row++){
+        for(int col=0;col<size;col++){
+            table[row][col] = 1/(1+exp(-table[row][col]));
+        }
+    }
 }
 
-double nonlinearityprime(int x){
-    return x*(1-x);
+void nonlinearityVector(double vector[]){
+    for(int i=0;i<NUM_DATA_SETS;i++){
+        vector[i]=1/(1+exp(-vector[i]));
+    }
+}
+
+void nonlinearityprime(int size, double table[][size]){
+    for(int row=0;row<NUM_DATA_SETS;row++){
+        for(int col=0;col<size;col++){
+            table[row][col] = table[row][col]*(1-table[row][col]);
+        }
+    }
 }
 
 void analyze(int iterations, int size, int data[][size], int solution[]){
@@ -58,64 +80,88 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     double synapse1[NUM_DATA_SETS];
     generate_synapse0(LEN_DATA, synapse0);
     generate_synapse1(synapse1);
-    printf("random weights synapse 1\n");
-    for(int row=0; row<LEN_DATA; row++){//print synapse0
-        for(int col=0; col<NUM_DATA_SETS; col++){
-            printf(">%f<",synapse0[row][col]);
-        }
-        printf("\n");
-    }
-    printf("synpase 2 weights\n");
-    for(int col=0;col<NUM_DATA_SETS;col++){//print synapse1
-        printf(">%f<\n",synapse1[col]);
-    }
-    printf("initial data\n");
+    
+#ifdef DEBUG
+    printf("INITIAL DATA\n");
     for(int row=0; row<NUM_DATA_SETS; row++){//print the data
         for(int col=0; col<LEN_DATA; col++){
-            printf("-%d-",data[row][col]);
+            printf("%d ",data[row][col]);
         }
         printf("\n");
     }
+    printf("SOLUTION DATA\n");
+    for(int i=0;i<4;i++){
+        printf("%d\n", solution[i]);
+    }
+#endif
     
     //training loop
     for(int train = 0; train<1; train++){
         int layer0[NUM_DATA_SETS][LEN_DATA];//training data
-        double layer1[NUM_DATA_SETS][LEN_DATA];//hidden weights
-        double layer2[NUM_DATA_SETS];//guesses
+        double layer1[NUM_DATA_SETS][LEN_DATA]={0};//hidden weights
+        double layer2[NUM_DATA_SETS]={0};//guesses
         //prepare layer 0
         deepcopy(4,3,data,layer0);//fill up layer 0
         //LAYER 0 READY
         //prepare layer 1
-        double mmresults[NUM_DATA_SETS][NUM_DATA_SETS] = {0};
         double data2[LEN_DATA][NUM_DATA_SETS] ={
             {2,3,4,5},
             {1,0,3,2},
             {9,4,7,2}
         };
-        matrix_mult(LEN_DATA, layer0, NUM_DATA_SETS, synapse0, mmresults);
-        
-        for(int row=0;row<4;row++){
-             for(int col=0;col<3;col++){
-                 printf("%d ",layer0[row][col]);
-             }
-             printf("\n");
-         }
-        printf("Synapse0\n");
+        //perform matrix multiplication on layer 0 and synapse0 and store the 
+        //results in layer 1
+        matrix_mult(LEN_DATA, layer0, NUM_DATA_SETS, synapse0, layer1);
+#ifdef DEBUG
+        printf("SYNAPSE0\n");
         for(int row=0;row<3;row++){
-             for(int col=0;col<4;col++){
-                 printf("%f ",synapse0[row][col]);
-             }
-             printf("\n");
-         }
-
-
-        printf("MATRIX AFTER MULT\n");
-        for(int row=0;row<4;row++){
             for(int col=0;col<4;col++){
-                printf("%f ",mmresults[row][col]);
+                printf("%f ",synapse0[row][col]);
             }
             printf("\n");
         }
+        printf("SYNAPSE1\n");
+        for(int col=0;col<NUM_DATA_SETS;col++){//print synapse1
+            printf("%f \n",synapse1[col]);
+        }
+        printf("LAYER1: MATRIX AFTER MULTIPLICATION, pre sigmoid\n");
+        for(int row=0;row<4;row++){
+            for(int col=0;col<4;col++){
+                printf("%f ",layer1[row][col]);
+            }
+            printf("\n");
+        }
+#endif  //push layer one through the nunlinearitly function(sigmoid)
+        nonlinearity(NUM_DATA_SETS, layer1);
+#ifdef DEBUG
+        printf("LAYER1: MATRIX AFTER NONLINEARITY, post sigmoid\n");
+        for(int row=0;row<4;row++){
+            for(int col=0;col<4;col++){
+                printf("%f ",layer1[row][col]);
+            }
+            printf("\n");
+        }
+#endif
+        //LAYER ONE COMPLETED
+        //prepare layer 2
+        //perform vertor matrix multiplication on layer1 and synapse 1 
+        //store the results in layer2 matrix
+        vector_matrix(NUM_DATA_SETS, layer1, synapse1, layer2);
+#ifdef DEBUG
+        printf("LAYER2: VECTOR AFTER MULTIPLICATION, pre sigmoid\n");
+        for(int i=0;i<NUM_DATA_SETS;i++){
+            printf("%f\n", layer2[i]);
+        }
+#endif  
+        //run layer2 though the sigmoid function
+        nonlinearityVector(layer2);
+#ifdef DEBUG
+        printf("LAYER2: VECTOR AFTER NONLINEARITY, post sigmoid\n");
+        for(int i=0;i<NUM_DATA_SETS;i++){
+            printf("%f\n", layer2[i]);
+        }
+#endif
+        //LAYER TWO COMPLETED
     }
 }
 
