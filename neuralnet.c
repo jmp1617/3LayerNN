@@ -2,6 +2,11 @@
 //random initial weights
 //backpropagation
 //
+//Spec: 2 synapses
+//      3 layers
+//      Sigmoid linearity
+//      
+//
 //usage: neuralnet [iterations of learning]
 
 #include "neuralnet.h"
@@ -26,36 +31,15 @@ void generate_synapse0(int size, double synapse[][size]){
     }
 }
 
-void nonlinearity(int size, double table[][size]){
-    for(int row=0;row<NUM_DATA_SETS;row++){
-        for(int col=0;col<size;col++){
-            table[row][col] = 1/(1+exp(-table[row][col]));
-        }
-    }
-}
-
-void nonlinearityVector(double vector[]){
-    for(int i=0;i<NUM_DATA_SETS;i++){
-        vector[i]=1/(1+exp(-vector[i]));
-    }
-}
-
-void nonlinearityprime(int size, double table[][size]){
-    for(int row=0;row<NUM_DATA_SETS;row++){
-        for(int col=0;col<size;col++){
-            table[row][col] = table[row][col]*(1-table[row][col]);
-        }
-    }
-}
-
 void analyze(int iterations, int size, int data[][size], int solution[]){
-    //generate initial synapse weights
-    double synapse0[LEN_DATA][NUM_DATA_SETS]={0};
-    double synapse1[NUM_DATA_SETS]={0};
-    int layer0[NUM_DATA_SETS][LEN_DATA]={0};
+    //instantiate matrices and vectors
+    double synapse0[LEN_DATA][NUM_DATA_SETS]={0};//(lenght of train data, num of train data)
+    double synapse1[NUM_DATA_SETS]={0};//vector size of the num of train data
+    int layer0[NUM_DATA_SETS][LEN_DATA]={0};//will be copy of train data
     double layer1[NUM_DATA_SETS][NUM_DATA_SETS]={0};//hidden weights
-    double layer2[NUM_DATA_SETS]={0};//guesses
-    generate_synapse0(LEN_DATA, synapse0);
+    double layer2[NUM_DATA_SETS]={0};//final layer to be error checked
+    //GENERATE SYNAPSES
+    generate_synapse0(LEN_DATA, synapse0);//fill both with random data -1,1
     generate_synapse1(synapse1);
     
 #ifdef DEBUG
@@ -69,22 +53,17 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     printf("SOLUTION DATA\n");
     for(int i=0;i<4;i++){
         printf("%d\n", solution[i]);
-    }
-    printf("SYNAPSE1\n");
-         for(int col=0;col<NUM_DATA_SETS;col++){//print synapse1
-             printf("%f \n",synapse1[col]);
-         }
-    
+    }    
 #endif
     
-    //training loop
+    //BEGIN TRAINING LOOP
     for(int train = 0; train<1; train++){
         //prepare layer 0
-        deepcopy(4,3,data,layer0);//fill up layer 0
+        deepcopy(NUM_DATA_SETS,LEN_DATA,data,layer0);//fill up layer 0
         //LAYER 0 COMPLETE
         //prepare layer 1
         //perform matrix multiplication on layer 0 and synapse0 and store the 
-        //r}sults in layer 1
+        //results in layer 1
         matrix_mult(LEN_DATA, layer0, NUM_DATA_SETS, synapse0, layer1);
 #ifdef DEBUG
         printf("SYNAPSE0\n");
@@ -106,7 +85,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
             printf("\n");
         }
 #endif  //push layer one through the nunlinearitly function(sigmoid)
-        nonlinearity(NUM_DATA_SETS, layer1);
+        nonlinearity(NUM_DATA_SETS, layer1);//modify in place
 #ifdef DEBUG
         printf("LAYER1: MATRIX AFTER NONLINEARITY, post sigmoid\n");
         for(int row=0;row<4;row++){
