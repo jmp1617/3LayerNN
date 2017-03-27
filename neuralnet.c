@@ -18,8 +18,14 @@ void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]){
     }
 }
 
-void matrix_mult(int size1, double matrix1[][size1], int size2, double matrix2[][size2], int result[][size1]){
-
+void matrix_mult(int size1, int matrix1[][size1], int size2, double matrix2[][size2], double result[][size2]){
+    for(int row=0;row<NUM_DATA_SETS;row++){
+        for(int col=0;col<NUM_DATA_SETS;col++){
+            for(int inner = 0;inner<LEN_DATA;inner++){
+                result[row][col] += matrix1[row][inner] * matrix2[inner][col];
+            }
+        }
+    }
 }
 
 void generate_synapse1(double synapse[]){
@@ -52,37 +58,64 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     double synapse1[NUM_DATA_SETS];
     generate_synapse0(LEN_DATA, synapse0);
     generate_synapse1(synapse1);
-    /*
+    printf("random weights synapse 1\n");
     for(int row=0; row<LEN_DATA; row++){//print synapse0
         for(int col=0; col<NUM_DATA_SETS; col++){
             printf(">%f<",synapse0[row][col]);
         }
         printf("\n");
     }
+    printf("synpase 2 weights\n");
     for(int col=0;col<NUM_DATA_SETS;col++){//print synapse1
         printf(">%f<\n",synapse1[col]);
     }
+    printf("initial data\n");
     for(int row=0; row<NUM_DATA_SETS; row++){//print the data
         for(int col=0; col<LEN_DATA; col++){
             printf("-%d-",data[row][col]);
         }
         printf("\n");
     }
-    */
+    
     //training loop
     for(int train = 0; train<1; train++){
         int layer0[NUM_DATA_SETS][LEN_DATA];//training data
         double layer1[NUM_DATA_SETS][LEN_DATA];//hidden weights
         double layer2[NUM_DATA_SETS];//guesses
-        deepcopy(4,3,data,layer0);//fill up layer 1
-        for(int row=0;row<4;row++){ 
-         for(int col=0;col<3;col++){
-             printf("%d",layer0[row][col]);
+        //prepare layer 0
+        deepcopy(4,3,data,layer0);//fill up layer 0
+        //LAYER 0 READY
+        //prepare layer 1
+        double mmresults[NUM_DATA_SETS][NUM_DATA_SETS] = {0};
+        double data2[LEN_DATA][NUM_DATA_SETS] ={
+            {2,3,4,5},
+            {1,0,3,2},
+            {9,4,7,2}
+        };
+        matrix_mult(LEN_DATA, layer0, NUM_DATA_SETS, synapse0, mmresults);
+        
+        for(int row=0;row<4;row++){
+             for(int col=0;col<3;col++){
+                 printf("%d ",layer0[row][col]);
+             }
+             printf("\n");
          }
-         printf("\n");
-     }
+        printf("Synapse0\n");
+        for(int row=0;row<3;row++){
+             for(int col=0;col<4;col++){
+                 printf("%f ",synapse0[row][col]);
+             }
+             printf("\n");
+         }
 
 
+        printf("MATRIX AFTER MULT\n");
+        for(int row=0;row<4;row++){
+            for(int col=0;col<4;col++){
+                printf("%f ",mmresults[row][col]);
+            }
+            printf("\n");
+        }
     }
 }
 

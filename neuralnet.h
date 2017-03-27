@@ -5,6 +5,14 @@
 #define LEN_DATA 3
 #define NUM_DATA_SETS 4
 
+///deep copy of matrix
+///param m: matrix to copy, m: new array
+void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]);
+
+///matrix multiplication for layer 0 and synapse 0
+///param size1,size2: sizes, matrix1, and matrix2 to be multiplied
+void matrix_mult(int size1, int matrix1[][size1], int size2, double matrix[][size2], double result[][size1]);
+
 ///generate a list of random numbers
 ///param: synapse: list
 void generate_synapse1(double synapse[]);
