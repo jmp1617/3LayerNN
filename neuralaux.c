@@ -15,21 +15,21 @@ void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]){
 
 void vector_matrix(int size, double matrix[][size], double vector[], double newvec[]){
     for(int row=0;row<NUM_DATA_SETS;row++){
+        printf("row: %d\n",row);
         for(int col=0;col<NUM_DATA_SETS;col++){
-            newvec[row]+=matrix[row][col]*vector[row];
-        }
+            printf("(%f * %f)+",matrix[row][col],vector[col]);
+            newvec[row]+=matrix[row][col]*vector[col]; //real matrix vector mult
+        }                                              //would be row instead col
+        printf("\nEndvalue: %f\n", newvec[row]);       //for vector index
     }
 }
 
 void matrix_mult(int size1, int matrix1[][size1], int size2, double matrix2[][size2], double result[][size2]){
     for(int row=0;row<NUM_DATA_SETS;row++){
         for(int col=0;col<NUM_DATA_SETS;col++){
-            printf("Row:%d, Col:%d\n",row,col);
             for(int inner = 0;inner<LEN_DATA;inner++){
-                printf("(%d * %f)+",matrix1[row][inner],matrix2[inner][col]);
                 result[row][col] += matrix1[row][inner] * matrix2[inner][col];
             }
-            printf("\nResult: %f\n", result[row][col]);
         }
     }
 }
