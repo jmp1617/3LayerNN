@@ -34,12 +34,19 @@ void matrix_mult(int size1, int matrix1[][size1], int size2, double matrix2[][si
             }
         }
     }
+     for(int row = 0;row<NUM_DATA_SETS;row++){
+             for(int col=0;col<NUM_DATA_SETS;col++){
+                 printf("%f ",result[row][col]);
+             }
+             printf("\n");
+         }
+
 }
 
 void generate_synapse1(double synapse[]){
     srand(time(NULL));
     for(int col=0;col<NUM_DATA_SETS;col++){
-        synapse[col] = (double)rand()/RAND_MAX*2.0-1.0;//rand between -1 and 1
+        synapse[col] = (double)rand()/RAND_MAX*2.0-1.0;
     }
 }
 
@@ -76,8 +83,11 @@ void nonlinearityprime(int size, double table[][size]){
 
 void analyze(int iterations, int size, int data[][size], int solution[]){
     //generate initial synapse weights
-    double synapse0[LEN_DATA][NUM_DATA_SETS];
-    double synapse1[NUM_DATA_SETS];
+    double synapse0[LEN_DATA][NUM_DATA_SETS]={0};
+    double synapse1[NUM_DATA_SETS]={0};
+    int layer0[NUM_DATA_SETS][LEN_DATA]={0};
+    double layer1[NUM_DATA_SETS][NUM_DATA_SETS]={0};//hidden weights
+    double layer2[NUM_DATA_SETS]={0};//guesses
     generate_synapse0(LEN_DATA, synapse0);
     generate_synapse1(synapse1);
     
@@ -93,24 +103,21 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     for(int i=0;i<4;i++){
         printf("%d\n", solution[i]);
     }
+    printf("SYNAPSE1\n");
+         for(int col=0;col<NUM_DATA_SETS;col++){//print synapse1
+             printf("%f \n",synapse1[col]);
+         }
+    
 #endif
     
     //training loop
     for(int train = 0; train<1; train++){
-        int layer0[NUM_DATA_SETS][LEN_DATA];//training data
-        double layer1[NUM_DATA_SETS][LEN_DATA]={0};//hidden weights
-        double layer2[NUM_DATA_SETS]={0};//guesses
         //prepare layer 0
         deepcopy(4,3,data,layer0);//fill up layer 0
-        //LAYER 0 READY
+        //LAYER 0 COMPLETE
         //prepare layer 1
-        double data2[LEN_DATA][NUM_DATA_SETS] ={
-            {2,3,4,5},
-            {1,0,3,2},
-            {9,4,7,2}
-        };
         //perform matrix multiplication on layer 0 and synapse0 and store the 
-        //results in layer 1
+        //r}sults in layer 1
         matrix_mult(LEN_DATA, layer0, NUM_DATA_SETS, synapse0, layer1);
 #ifdef DEBUG
         printf("SYNAPSE0\n");
