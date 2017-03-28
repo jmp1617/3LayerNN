@@ -43,7 +43,11 @@ void nonlinearityVector(double table[]);
 ///for multiplying "guesses" by offset
 void elementwiseVector(double vector1[], double vector2[], double result[]);
 
-///calculate error vector 
+///vector vector matrix product
+///param: vector1,2 vectors of format a>b b=1 (a,b)*(b,a), result array
+void vectorvectordot(double vector1[],double vector2[], int size,double result[][size]);
+
+///calculate error vector
 ///param: layer2: layer2 vector. solution: solution, error: error vector
 void checkerror(double layer2[], int solution[], double error[]); 
 

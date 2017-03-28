@@ -65,6 +65,14 @@ void elementwiseVector(double vector1[], double vector2[], double result[]){
     }
 }
 
+void vectorvectordot(double vector1[], double vector2[], int size, double result[][size]){
+    for(int row=0;row<NUM_DATA_SETS;row++){
+        for(int col=0;col<NUM_DATA_SETS;col++){
+            result[row][col] = vector1[row] * vector2[col];
+        }
+    }
+}
+
 void checkerror(double layer2[], int solution[], double error[]){
     for(int sol=0;sol<NUM_DATA_SETS;sol++){
         error[sol] = solution[sol] - layer2[sol];

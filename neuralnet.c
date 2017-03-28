@@ -40,7 +40,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     double layer2[NUM_DATA_SETS]={0};//final layer to be error checked
     double layer2error[NUM_DATA_SETS]={0};//vector to hold error
     double layer2delta[NUM_DATA_SETS]={0};//hold altered answers
-    double layer1error[NUM_DATA_SETS]={0};//vector for layer1 error
+    double layer1error[NUM_DATA_SETS][NUM_DATA_SETS]={0};//vector for layer1 error
     double layer1delta[NUM_DATA_SETS]={0};//hold altered answers for layer1
     //GENERATE SYNAPSES
     generate_synapse0(LEN_DATA, synapse0);//fill both with random data -1,1
@@ -142,7 +142,19 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         }
 #endif
         //ammount layer1 contributed to layer2 error
-        
+        //perform matrix mult on layer2delta and synapse1
+        //which is (A,1) * (1,A) where A>1
+        //TODO possible flop if error
+        vectorvectordot(layer2delta, synapse1, NUM_DATA_SETS, layer1error);
+#ifdef DEBUG
+        printf("LAYER1 ERROR\n");
+        for(int row=0;row<NUM_DATA_SETS;row++){
+            for(int col=0;col<NUM_DATA_SETS;col++){
+                printf("%f ",layer1error[row][col]);
+            }
+            printf("\n");
+        }
+#endif
     }
 }
 
