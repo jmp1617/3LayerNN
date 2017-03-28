@@ -38,6 +38,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     int layer0[NUM_DATA_SETS][LEN_DATA]={0};//will be copy of train data
     double layer1[NUM_DATA_SETS][NUM_DATA_SETS]={0};//hidden weights
     double layer2[NUM_DATA_SETS]={0};//final layer to be error checked
+    double layer2error[NUM_DATA_SETS]={0};//vector to hold error
     //GENERATE SYNAPSES
     generate_synapse0(LEN_DATA, synapse0);//fill both with random data -1,1
     generate_synapse1(synapse1);
@@ -115,6 +116,17 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         }
 #endif
         //LAYER TWO COMPLETED
+        //check error and create the arror vector
+        checkerror(layer2,solution,layer2error);
+#ifdef DEBUG
+        printf("ERROR: HOW MUCH OFF BY\n");
+        for(int i=0;i<NUM_DATA_SETS;i++){
+            printf("%f\n",layer2error[i]);
+        }
+#endif  
+        if(train%1000==0){
+            printf("Synapse Error: %f\n",meanabs(layer2error));
+        }
     }
 }
 

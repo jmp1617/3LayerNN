@@ -15,12 +15,9 @@ void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]){
 
 void vector_matrix(int size, double matrix[][size], double vector[], double newvec[]){
     for(int row=0;row<NUM_DATA_SETS;row++){
-        printf("row: %d\n",row);
         for(int col=0;col<NUM_DATA_SETS;col++){
-            printf("(%f * %f)+",matrix[row][col],vector[col]);
             newvec[row]+=matrix[row][col]*vector[col]; //real matrix vector mult
-        }                                              //would be row instead col
-        printf("\nEndvalue: %f\n", newvec[row]);       //for vector index
+        }                                              //would be row instead col    
     }
 }
 
@@ -56,3 +53,16 @@ void nonlinearityprime(int size, double table[][size]){
     }
 }
 
+void checkerror(double layer2[], int solution[], double error[]){
+    for(int sol=0;sol<NUM_DATA_SETS;sol++){
+        error[sol] = solution[sol] - layer2[sol];
+    }
+}
+
+double meanabs(double input_error[]){
+    double mean = 0.0;
+    for(int error=0;error<NUM_DATA_SETS;error++){
+        mean = fabs(input_error[error]);
+    }
+    return mean/NUM_DATA_SETS;
+}

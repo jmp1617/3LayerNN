@@ -37,6 +37,14 @@ void nonlinearity(int size, double table[][size]);
 ///same thing but for vectors
 void nonlinearityVector(double table[]);
 
+///calculate error vector 
+///param: layer2: layer2 vector. solution: solution, error: error vector
+void checkerror(double layer2[], int solution[], double error[]); 
+
+///mean the absolute values of the vector
+///param: error: error vector
+double meanabs(double error[]);
+
 ///main learning routine, 
 ///param: iterations: number of training loops
 ///if iterations is 0 default to 10,000
