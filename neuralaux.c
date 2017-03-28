@@ -53,6 +53,18 @@ void nonlinearityprime(int size, double table[][size]){
     }
 }
 
+void nonlinearityprimeVector(double table[]){
+    for(int col=0;col<NUM_DATA_SETS;col++){
+        table[col]=table[col]*(1-table[col]);
+    }
+}
+
+void elementwiseVector(double vector1[], double vector2[], double result[]){
+    for(int element=0;element<NUM_DATA_SETS;element++){
+        result[element] = vector1[element]*vector2[element];
+    }
+}
+
 void checkerror(double layer2[], int solution[], double error[]){
     for(int sol=0;sol<NUM_DATA_SETS;sol++){
         error[sol] = solution[sol] - layer2[sol];

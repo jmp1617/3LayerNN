@@ -29,6 +29,8 @@ void generate_synapse0(int size, double synapse[][size]);
 ///the neural nets confidence
 ///param: x: the value to put though sigmoid derivative
 void nonlinearityprime(int size, double table[][size]);
+///same thing but for vectors
+void nonlinearityprimeVector(double table[]);
 
 ///nonlinearity using a sigmoid function to map
 ///any value to a number between 0 and 1
@@ -36,6 +38,10 @@ void nonlinearityprime(int size, double table[][size]);
 void nonlinearity(int size, double table[][size]);
 ///same thing but for vectors
 void nonlinearityVector(double table[]);
+
+///element wise vector multiplication
+///for multiplying "guesses" by offset
+void elementwiseVector(double vector1[], double vector2[], double result[]);
 
 ///calculate error vector 
 ///param: layer2: layer2 vector. solution: solution, error: error vector

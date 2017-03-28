@@ -39,6 +39,9 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     double layer1[NUM_DATA_SETS][NUM_DATA_SETS]={0};//hidden weights
     double layer2[NUM_DATA_SETS]={0};//final layer to be error checked
     double layer2error[NUM_DATA_SETS]={0};//vector to hold error
+    double layer2delta[NUM_DATA_SETS]={0};//hold altered answers
+    double layer1error[NUM_DATA_SETS]={0};//vector for layer1 error
+    double layer1delta[NUM_DATA_SETS]={0};//hold altered answers for layer1
     //GENERATE SYNAPSES
     generate_synapse0(LEN_DATA, synapse0);//fill both with random data -1,1
     generate_synapse1(synapse1);
@@ -127,11 +130,25 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         if(train%1000==0){
             printf("Synapse Error: %f\n",meanabs(layer2error));
         }
+        //run through nonlinearity derivative 
+        //slightly alter confident results
+        //greatly alter unconfident results
+        nonlinearityprimeVector(layer2);
+        elementwiseVector(layer2error,layer2,layer2delta);
+#ifdef DEBUG
+        printf("LAYER2 DELTA\n");
+        for(int i = 0;i<NUM_DATA_SETS;i++){
+            printf("%f\n",layer2delta[i]);
+        }
+#endif
+        //ammount layer1 contributed to layer2 error
+        
     }
 }
 
 int main(int argc, char * argv[]){
-
+    //NUM_DATA_SETS: 4
+    //LEN_DATA: 3
     //data to train
     int data[NUM_DATA_SETS][LEN_DATA] = {
         {0,0,1},
