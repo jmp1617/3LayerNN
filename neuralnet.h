@@ -8,6 +8,7 @@
 ///deep copy of matrix
 ///param m: matrix to copy, m: new array
 void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]);
+void doubledeepcopy(int rows, int cols, double m[][cols], double newm[][cols]);
 
 ///vector matrix multiplication
 ///param matrix: the matrix, vector: vector to multiply the matrix by
@@ -42,6 +43,7 @@ void nonlinearityVector(double table[]);
 ///element wise vector multiplication
 ///for multiplying "guesses" by offset
 void elementwiseVector(double vector1[], double vector2[], double result[]);
+void elementwiseMatrix(int size, double matrix1[][size], double matrix2[][size], double result[][size]);
 
 ///vector vector matrix product
 ///param: vector1,2 vectors of format a>b b=1 (a,b)*(b,a), result array

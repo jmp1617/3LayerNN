@@ -41,7 +41,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     double layer2error[NUM_DATA_SETS]={0};//vector to hold error
     double layer2delta[NUM_DATA_SETS]={0};//hold altered answers
     double layer1error[NUM_DATA_SETS][NUM_DATA_SETS]={0};//vector for layer1 error
-    double layer1delta[NUM_DATA_SETS]={0};//hold altered answers for layer1
+    double layer1delta[NUM_DATA_SETS][NUM_DATA_SETS]={0};//hold altered answers for layer1
     //GENERATE SYNAPSES
     generate_synapse0(LEN_DATA, synapse0);//fill both with random data -1,1
     generate_synapse1(synapse1);
@@ -122,18 +122,24 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         //check error and create the arror vector
         checkerror(layer2,solution,layer2error);
 #ifdef DEBUG
-        printf("ERROR: HOW MUCH OFF BY\n");
+        printf("LAYER2 ERROR\n");
         for(int i=0;i<NUM_DATA_SETS;i++){
             printf("%f\n",layer2error[i]);
         }
 #endif  
         if(train%1000==0){
-            printf("Synapse Error: %f\n",meanabs(layer2error));
+            printf("!!!!Synapse Error: %f!!!!\n",meanabs(layer2error));
         }
         //run through nonlinearity derivative 
         //slightly alter confident results
         //greatly alter unconfident results
         nonlinearityprimeVector(layer2);
+#ifdef DEBUG
+        printf("LAYER2 AFTER NONLIN PRIME\n");
+        for(int col = 0;col<NUM_DATA_SETS;col++){
+            printf("%f\n",layer2[col]);
+        }
+#endif
         elementwiseVector(layer2error,layer2,layer2delta);
 #ifdef DEBUG
         printf("LAYER2 DELTA\n");
@@ -151,6 +157,31 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         for(int row=0;row<NUM_DATA_SETS;row++){
             for(int col=0;col<NUM_DATA_SETS;col++){
                 printf("%f ",layer1error[row][col]);
+            }
+            printf("\n");
+        }
+#endif
+        //calculate the layer1delta 
+        //this is just the layer1error ajusted by the neural nets confidence
+        //first run through derivative nonlinearity
+        double templayer1[NUM_DATA_SETS][NUM_DATA_SETS]={0};//layer 1 copy
+        doubledeepcopy(NUM_DATA_SETS,NUM_DATA_SETS,layer1,templayer1);
+        nonlinearityprime(NUM_DATA_SETS, templayer1);
+#ifdef DEBUG
+        printf("LAYER1 AFTER NONLIN PRIME\n");
+        for(int row=0;row<NUM_DATA_SETS;row++){
+            for(int col=0;col<NUM_DATA_SETS;col++){
+                printf("%f ",templayer1[row][col]);
+            }
+            printf("\n");
+        }
+#endif
+        elementwiseMatrix(NUM_DATA_SETS, layer1error, templayer1, layer1delta);
+#ifdef DEBUG
+        printf("LAYER1 DELTA\n");
+        for(int row=0;row<NUM_DATA_SETS;row++){
+            for(int col=0;col<NUM_DATA_SETS;col++){
+                printf("%f ",layer1delta[row][col]);
             }
             printf("\n");
         }

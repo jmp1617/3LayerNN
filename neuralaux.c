@@ -13,6 +13,14 @@ void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]){
     }
 }
 
+void doubledeepcopy(int rows, int cols, double m[][cols], double newm[][cols]){
+    for(int row=0;row<rows;row++){
+        for(int col=0;col<cols;col++){
+            newm[row][col] = m[row][col];
+        }
+    }
+}
+
 void vector_matrix(int size, double matrix[][size], double vector[], double newvec[]){
     for(int row=0;row<NUM_DATA_SETS;row++){
         for(int col=0;col<NUM_DATA_SETS;col++){
@@ -62,6 +70,14 @@ void nonlinearityprimeVector(double table[]){
 void elementwiseVector(double vector1[], double vector2[], double result[]){
     for(int element=0;element<NUM_DATA_SETS;element++){
         result[element] = vector1[element]*vector2[element];
+    }
+}
+
+void elementwiseMatrix(int size, double matrix1[][size], double matrix2[][size], double result[][size]){
+    for(int row=0;row<size;row++){
+        for(int col=0;col<size;col++){
+            result[row][col] = matrix1[row][col] * matrix2[row][col];
+        }
     }
 }
 
