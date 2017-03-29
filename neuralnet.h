@@ -5,6 +5,12 @@
 #define LEN_DATA 3
 #define NUM_DATA_SETS 4
 
+///update synapse1
+///param synapse: syn to update, layer1: layer
+void updatesynapse1(double synapse[], int size, double layer1[][size],double layer2delta[]);
+///update synapse0
+void updatesynapse0(int size, double synapse[][size], int size1, int layer0[][size1], double layer1delta[][size]);  
+
 ///deep copy of matrix
 ///param m: matrix to copy, m: new array
 void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]);

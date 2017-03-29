@@ -186,6 +186,16 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
             printf("\n");
         }
 #endif
+        //PREPARE TO UPDATE WEIGHTS
+        //weight_change = initial_data*layer_delta
+        updatesynapse1(synapse1, NUM_DATA_SETS, layer1, layer2delta);
+#ifdef DEBUG
+        printf("UPDATED SYNAPSE1\n");
+        for(int weight=0;weight<NUM_DATA_SETS;weight++){
+            printf("%f\n",synapse1[weight]);
+        }
+#endif
+        updatesynapse0(NUM_DATA_SETS, synapse0, LEN_DATA, layer0, layer1delta);
     }
 }
 

@@ -5,6 +5,35 @@
 #include <math.h>
 #include <time.h>
 
+void updatesynapse1(double synapse[], int size, double layer1[][size], double layer2delta[]){
+    double toadd[NUM_DATA_SETS]={0};       //vector matrix 
+    for(int col=0;col<NUM_DATA_SETS;col++){//using col first because the array needs to be
+        for(int row=0;row<NUM_DATA_SETS;row++){// transposed
+            toadd[col] += layer1[row][col] * layer2delta[row];
+        }
+    }
+    for(int weight=0;weight<NUM_DATA_SETS;weight++){
+        synapse[weight]+=toadd[weight];
+    }
+}
+
+void updatesynapse0(int size, double synapse[][size], int size1, int layer0[][size1], double layer1delta[][size]){
+    //transpose layer0;
+    int transposedl0[LEN_DATA][NUM_DATA_SETS]={0};
+    for(int col=0;col<LEN_DATA;col++){
+        for(int row=0;row<NUM_DATA_SETS;row++){
+            transposedl0[col][row] = layer0[row][col];
+        }
+    }
+    for(int row=0;row<LEN_DATA;row++){
+        for(int col=0;col<NUM_DATA_SETS;col++){
+            printf("%d ",transposedl0[row][col]);
+        }   
+        printf("\n");
+    }
+    //matrix multiplication
+}
+
 void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]){
     for(int row=0;row<rows;row++){
         for(int col=0;col<cols;col++){
