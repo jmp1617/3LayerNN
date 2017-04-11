@@ -196,6 +196,15 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         }
 #endif
         updatesynapse0(NUM_DATA_SETS, synapse0, LEN_DATA, layer0, layer1delta);
+#ifdef DEBUG
+        printf("UPDATED SYNAPSE0\n");
+        for(int row=0;row<LEN_DATA;row++){
+            for(int col=0;col<NUM_DATA_SETS;col++){
+                printf("%f ",synapse0[row][col]);
+            }
+            printf("\n");
+        }
+#endif
     }
 }
 

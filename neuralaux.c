@@ -25,13 +25,21 @@ void updatesynapse0(int size, double synapse[][size], int size1, int layer0[][si
             transposedl0[col][row] = layer0[row][col];
         }
     }
+    float dotmult[LEN_DATA][NUM_DATA_SETS]={0};
+    //matrix multiplication
     for(int row=0;row<LEN_DATA;row++){
         for(int col=0;col<NUM_DATA_SETS;col++){
-            printf("%d ",transposedl0[row][col]);
-        }   
-        printf("\n");
+            for(int inner=0;inner<NUM_DATA_SETS;inner++){
+                dotmult[row][col] += transposedl0[row][inner] * layer1delta[inner][col];
+            }
+        }
     }
-    //matrix multiplication
+    //add the new matrix to the synapse weights
+    for(int row=0;row<LEN_DATA;row++){
+        for(int col=0;col<NUM_DATA_SETS;col++){
+            synapse[row][col] = dotmult[row][col];
+        }
+    }
 }
 
 void deepcopy(int rows, int cols, int m[][cols], int newm[][cols]){
