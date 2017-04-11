@@ -5,7 +5,7 @@
 #include <math.h>
 #include <time.h>
 
-void updatesynapse1(double synapse[], int size, double layer1[][size], double layer2delta[]){
+void updatesynapse1(double synapse[], double layer1[][NUM_DATA_SETS], double layer2delta[]){
     double toadd[NUM_DATA_SETS]={0};       //vector matrix 
     for(int col=0;col<NUM_DATA_SETS;col++){//using col first because the array needs to be
         for(int row=0;row<NUM_DATA_SETS;row++){// transposed
@@ -17,7 +17,7 @@ void updatesynapse1(double synapse[], int size, double layer1[][size], double la
     }
 }
 
-void updatesynapse0(int size, double synapse[][size], int size1, int layer0[][size1], double layer1delta[][size]){
+void updatesynapse0(double synapse[][NUM_DATA_SETS], int layer0[][LEN_DATA], double layer1delta[][NUM_DATA_SETS]){
     //transpose layer0;
     int transposedl0[LEN_DATA][NUM_DATA_SETS]={0};
     for(int col=0;col<LEN_DATA;col++){

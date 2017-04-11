@@ -3,13 +3,13 @@
 
 #define DEFITER 10000
 #define LEN_DATA 3
-#define NUM_DATA_SETS 4
+#define NUM_DATA_SETS 5
 
 ///update synapse1
 ///param synapse: syn to update, layer1: layer
-void updatesynapse1(double synapse[], int size, double layer1[][size],double layer2delta[]);
+void updatesynapse1(double synapse[], double layer1[][NUM_DATA_SETS],double layer2delta[]);
 ///update synapse0
-void updatesynapse0(int size, double synapse[][size], int size1, int layer0[][size1], double layer1delta[][size]);  
+void updatesynapse0(double synapse[][NUM_DATA_SETS], int layer0[][LEN_DATA], double layer1delta[][NUM_DATA_SETS]);  
 
 ///deep copy of matrix
 ///param m: matrix to copy, m: new array

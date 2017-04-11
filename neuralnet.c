@@ -196,14 +196,14 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
 #endif
         //PREPARE TO UPDATE WEIGHTS
         //weight_change = initial_data*layer_delta
-        updatesynapse1(synapse1, NUM_DATA_SETS, layer1, layer2delta);
+        updatesynapse1(synapse1, layer1, layer2delta);
 #ifdef DEBUG
         printf("UPDATED SYNAPSE1\n");
         for(int weight=0;weight<NUM_DATA_SETS;weight++){
             printf("%f\n",synapse1[weight]);
         }
 #endif
-        updatesynapse0(NUM_DATA_SETS, synapse0, LEN_DATA, layer0, layer1delta);
+        updatesynapse0(synapse0, layer0, layer1delta);
 #ifdef DEBUG
         printf("UPDATED SYNAPSE0\n");
         for(int row=0;row<LEN_DATA;row++){
@@ -238,12 +238,13 @@ int main(int argc, char * argv[]){
         {0,0,1},
         {0,1,1},
         {1,0,1},
-        {1,1,1}
+        {1,1,1},
+        {1,0,0}
     };
 
     //the pattern is the 2nd col must contain a 1 and either the
     //0th or 1st col must also be 1, but not both
-    int solution[NUM_DATA_SETS] = {0,1,1,0}; 
+    int solution[NUM_DATA_SETS] = {0,1,1,0,1}; 
 
     if (argc==1){//use default iterations
         analyze(0,LEN_DATA,data,solution);
