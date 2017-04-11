@@ -42,6 +42,9 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     double layer2delta[NUM_DATA_SETS]={0};//hold altered answers
     double layer1error[NUM_DATA_SETS][NUM_DATA_SETS]={0};//vector for layer1 error
     double layer1delta[NUM_DATA_SETS][NUM_DATA_SETS]={0};//hold altered answers for layer1
+    
+    double results[NUM_DATA_SETS]={0}; //array to hold the nn results
+
     //GENERATE SYNAPSES
     generate_synapse0(LEN_DATA, synapse0);//fill both with random data -1,1
     generate_synapse1(synapse1);
@@ -62,7 +65,9 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     
     //BEGIN TRAINING LOOP
     for(int train = 0; train<iterations; train++){
+#ifdef DEBUG
         printf("=============================================\n");
+#endif
         //prepare layer 0
         deepcopy(NUM_DATA_SETS,LEN_DATA,data,layer0);//fill up layer 0
         //LAYER 0 COMPLETE
@@ -113,6 +118,9 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
 #endif  
         //run layer2 though the sigmoid function
         nonlinearityVector(layer2);
+        for(int ans=0;ans<NUM_DATA_SETS;ans++){
+            results[ans] = layer2[ans];
+        }
 #ifdef DEBUG
         printf("LAYER2: VECTOR AFTER NONLINEARITY, post sigmoid\n");
         for(int i=0;i<NUM_DATA_SETS;i++){
@@ -129,7 +137,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         }
 #endif  
         if(train%1000==0){
-            printf("!!!!Synapse Error: %f!!!!\n",meanabs(layer2error));
+            printf("%d:!!!!Synapse Error: %f!!!!\n",train,meanabs(layer2error));
         }
         //run through nonlinearity derivative 
         //slightly alter confident results
@@ -151,7 +159,6 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         //ammount layer1 contributed to layer2 error
         //perform matrix mult on layer2delta and synapse1
         //which is (A,1) * (1,A) where A>1
-        //TODO possible flop if error
         vectorvectordot(layer2delta, synapse1, NUM_DATA_SETS, layer1error);
 #ifdef DEBUG
         printf("LAYER1 ERROR\n");
@@ -208,8 +215,18 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
 #endif
     }
     printf("!!!!Results!!!!\n");
-    for(int syn=0;syn<NUM_DATA_SETS;syn++){
-        printf("Set %d: %f\n",syn,layer2[syn]);
+    for(int row=0;row<NUM_DATA_SETS;row++){
+        printf("Data Set: ");
+        for(int col=0;col<LEN_DATA;col++){
+            printf("%d ",data[row][col]);
+        }
+        printf("- NN Guess: %f%% sure this is correct",(results[row])*100);
+        if((results[row]*100)>90){
+            printf(" -> 1\n");
+        }
+        else{
+            printf(" -> 0\n");
+        }
     }
 }
 

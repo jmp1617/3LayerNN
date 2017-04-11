@@ -25,14 +25,6 @@ void updatesynapse0(int size, double synapse[][size], int size1, int layer0[][si
             transposedl0[col][row] = layer0[row][col];
         }
     }
-    printf("Transposed\n");
-    for(int row=0;row<LEN_DATA;row++){
-        for(int col=0;col<NUM_DATA_SETS;col++){
-            printf("%d ",transposedl0[row][col]);
-        }
-        printf("\n");
-    }
-
     float dotmult[LEN_DATA][NUM_DATA_SETS]={0};
     //matrix multiplication
     for(int row=0;row<LEN_DATA;row++){
@@ -42,14 +34,6 @@ void updatesynapse0(int size, double synapse[][size], int size1, int layer0[][si
             }
         }
     }
-    printf("Multiplied\n");
-    for(int row=0;row<LEN_DATA;row++){
-        for(int col=0;col<NUM_DATA_SETS;col++){
-            printf("%f ",dotmult[row][col]);
-        }
-        printf("\n");
-    }
-
     //add the new matrix to the synapse weights
     for(int row=0;row<LEN_DATA;row++){
         for(int col=0;col<NUM_DATA_SETS;col++){
