@@ -61,7 +61,8 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
 #endif
     
     //BEGIN TRAINING LOOP
-    for(int train = 0; train<1; train++){
+    for(int train = 0; train<iterations; train++){
+        printf("=============================================\n");
         //prepare layer 0
         deepcopy(NUM_DATA_SETS,LEN_DATA,data,layer0);//fill up layer 0
         //LAYER 0 COMPLETE
@@ -205,6 +206,10 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
             printf("\n");
         }
 #endif
+    }
+    printf("!!!!Results!!!!\n");
+    for(int syn=0;syn<NUM_DATA_SETS;syn++){
+        printf("Set %d: %f\n",syn,layer2[syn]);
     }
 }
 
