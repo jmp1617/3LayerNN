@@ -5,8 +5,32 @@
 #include <math.h>
 #include <time.h>
 
+void validate(double synapse0[][NUM_DATA_SETS], double synapse1[], int data[][LEN_DATA]){
+    int layer0[NUM_DATA_SETS][LEN_DATA]={0};
+    double layer1[NUM_DATA_SETS][NUM_DATA_SETS]={0};
+    double layer2[NUM_DATA_SETS]={0};
+    deepcopy(NUM_DATA_SETS,LEN_DATA,data,layer0);
+    matrix_mult(LEN_DATA, layer0, NUM_DATA_SETS, synapse0, layer1);
+    nonlinearity(NUM_DATA_SETS, layer1);
+    vector_matrix(NUM_DATA_SETS, layer1, synapse1, layer2);
+    nonlinearityVector(layer2);
+    for(int row=0;row<NUM_DATA_SETS;row++){
+        printf("Test Set: ");
+        for(int col=0;col<LEN_DATA;col++){
+            printf("%d ",data[row][col]);
+        }
+        printf("- NN Guess: %f%% sure this is correct",(layer2[row])*100);
+        if((layer2[row]*100)>90){
+            printf(" -> 1\n");
+        }
+        else{
+            printf(" -> 0\n");
+        }
+    }
+}
+
 void updatesynapse1(double synapse[], double layer1[][NUM_DATA_SETS], double layer2delta[]){
-    double toadd[NUM_DATA_SETS]={0};       //vector matrix 
+    double toadd[NUM_DATA_SETS]={0};       //vector matrix
     for(int col=0;col<NUM_DATA_SETS;col++){//using col first because the array needs to be
         for(int row=0;row<NUM_DATA_SETS;row++){// transposed
             toadd[col] += layer1[row][col] * layer2delta[row];
@@ -62,7 +86,7 @@ void vector_matrix(int size, double matrix[][size], double vector[], double newv
     for(int row=0;row<NUM_DATA_SETS;row++){
         for(int col=0;col<NUM_DATA_SETS;col++){
             newvec[row]+=matrix[row][col]*vector[col]; //real matrix vector mult
-        }                                              //would be row instead col    
+        }                                              //would be row instead col
     }
 }
 

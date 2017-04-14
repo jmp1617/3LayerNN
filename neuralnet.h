@@ -2,14 +2,14 @@
 #define NEURALNET_H
 
 #define DEFITER 10000
-#define LEN_DATA 3
+#define LEN_DATA 12
 #define NUM_DATA_SETS 5
 
 ///update synapse1
 ///param synapse: syn to update, layer1: layer
 void updatesynapse1(double synapse[], double layer1[][NUM_DATA_SETS],double layer2delta[]);
 ///update synapse0
-void updatesynapse0(double synapse[][NUM_DATA_SETS], int layer0[][LEN_DATA], double layer1delta[][NUM_DATA_SETS]);  
+void updatesynapse0(double synapse[][NUM_DATA_SETS], int layer0[][LEN_DATA], double layer1delta[][NUM_DATA_SETS]);
 
 ///deep copy of matrix
 ///param m: matrix to copy, m: new array
@@ -57,15 +57,20 @@ void vectorvectordot(double vector1[],double vector2[], int size,double result[]
 
 ///calculate error vector
 ///param: layer2: layer2 vector. solution: solution, error: error vector
-void checkerror(double layer2[], int solution[], double error[]); 
+void checkerror(double layer2[], int solution[], double error[]);
 
 ///mean the absolute values of the vector
 ///param: error: error vector
 double meanabs(double error[]);
 
-///main learning routine, 
+///main learning routine,
 ///param: iterations: number of training loops
 ///if iterations is 0 default to 10,000
 void analyze(int iterations, int size, int data[][size], int solution[]);
+
+///validation routine
+///param: syn0: synapse0, syn1: synapse1. data: test data
+///void
+void validate(double synapse0[][NUM_DATA_SETS], double synapse1[], int data[][LEN_DATA]);
 
 #endif

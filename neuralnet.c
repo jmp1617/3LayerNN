@@ -5,7 +5,7 @@
 //Spec: 2 synapses
 //      3 layers
 //      Sigmoid linearity
-//      
+//
 //
 //usage: neuralnet [iterations of learning]
 
@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h> 
+#include <time.h>
 
 void generate_synapse1(double synapse[]){
     srand(time(NULL));
@@ -42,13 +42,13 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     double layer2delta[NUM_DATA_SETS]={0};//hold altered answers
     double layer1error[NUM_DATA_SETS][NUM_DATA_SETS]={0};//vector for layer1 error
     double layer1delta[NUM_DATA_SETS][NUM_DATA_SETS]={0};//hold altered answers for layer1
-    
+
     double results[NUM_DATA_SETS]={0}; //array to hold the nn results
 
     //GENERATE SYNAPSES
     generate_synapse0(LEN_DATA, synapse0);//fill both with random data -1,1
     generate_synapse1(synapse1);
-    
+
 #ifdef DEBUG
     printf("INITIAL DATA\n");
     for(int row=0; row<NUM_DATA_SETS; row++){//print the data
@@ -60,9 +60,9 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
     printf("SOLUTION DATA\n");
     for(int i=0;i<4;i++){
         printf("%d\n", solution[i]);
-    }    
+    }
 #endif
-    
+
     //BEGIN TRAINING LOOP
     for(int train = 0; train<iterations; train++){
 #ifdef DEBUG
@@ -72,7 +72,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         deepcopy(NUM_DATA_SETS,LEN_DATA,data,layer0);//fill up layer 0
         //LAYER 0 COMPLETE
         //prepare layer 1
-        //perform matrix multiplication on layer 0 and synapse0 and store the 
+        //perform matrix multiplication on layer 0 and synapse0 and store the
         //results in layer 1
         matrix_mult(LEN_DATA, layer0, NUM_DATA_SETS, synapse0, layer1);
 #ifdef DEBUG
@@ -107,7 +107,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
 #endif
         //LAYER ONE COMPLETED
         //prepare layer 2
-        //perform vertor matrix multiplication on layer1 and synapse 1 
+        //perform vertor matrix multiplication on layer1 and synapse 1
         //store the results in layer2 matrix
         vector_matrix(NUM_DATA_SETS, layer1, synapse1, layer2);
 #ifdef DEBUG
@@ -115,7 +115,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         for(int i=0;i<NUM_DATA_SETS;i++){
             printf("%f\n", layer2[i]);
         }
-#endif  
+#endif
         //run layer2 though the sigmoid function
         nonlinearityVector(layer2);
         for(int ans=0;ans<NUM_DATA_SETS;ans++){
@@ -135,11 +135,12 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         for(int i=0;i<NUM_DATA_SETS;i++){
             printf("%f\n",layer2error[i]);
         }
-#endif  
+#endif
         if(train%1000==0){
+            printf("Percent complete: %f%%",((double)train/(double)iterations)*100);
             printf("%d:!!!!Synapse Error: %f!!!!\n",train,meanabs(layer2error));
         }
-        //run through nonlinearity derivative 
+        //run through nonlinearity derivative
         //slightly alter confident results
         //greatly alter unconfident results
         nonlinearityprimeVector(layer2);
@@ -169,7 +170,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
             printf("\n");
         }
 #endif
-        //calculate the layer1delta 
+        //calculate the layer1delta
         //this is just the layer1error ajusted by the neural nets confidence
         //first run through derivative nonlinearity
         double templayer1[NUM_DATA_SETS][NUM_DATA_SETS]={0};//layer 1 copy
@@ -214,6 +215,7 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
         }
 #endif
     }
+#ifdef DEBUG
     printf("!!!!Results!!!!\n");
     for(int row=0;row<NUM_DATA_SETS;row++){
         printf("Data Set: ");
@@ -228,6 +230,15 @@ void analyze(int iterations, int size, int data[][size], int solution[]){
             printf(" -> 0\n");
         }
     }
+#endif
+    int test_data[NUM_DATA_SETS][LEN_DATA] = {
+        {0,0,0,0,0,0,0,0,0,0,1,0},
+        {0,0,0,0,0,0,1,1,1,1,1,1},
+        {0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0}
+    };
+    validate(synapse0,synapse1,test_data);
 }
 
 int main(int argc, char * argv[]){
@@ -235,22 +246,22 @@ int main(int argc, char * argv[]){
     //LEN_DATA: 3
     //data to train
     int data[NUM_DATA_SETS][LEN_DATA] = {
-        {0,0,1},
-        {0,1,1},
-        {1,0,1},
-        {1,1,1},
-        {1,0,0}
+        {1,1,0,0,1,0,0,1,1,0,0,1},
+        {0,1,0,0,1,1,1,0,0,0,1,0},
+        {1,1,1,1,0,0,1,0,1,0,0,1},
+        {1,0,0,1,1,1,0,0,0,1,1,1},
+        {1,0,1,1,0,0,0,1,0,1,1,0}
     };
 
     //the pattern is the 2nd col must contain a 1 and either the
     //0th or 1st col must also be 1, but not both
-    int solution[NUM_DATA_SETS] = {0,1,1,0,1}; 
+    int solution[NUM_DATA_SETS] = {0,1,1,0,1};
 
     if (argc==1){//use default iterations
         analyze(0,LEN_DATA,data,solution);
     }
     else if(argc==2){//use user specified inputs
-        analyze(atoi(argv[1]),LEN_DATA,data,solution); 
+        analyze(atoi(argv[1]),LEN_DATA,data,solution);
     }
     else{
         printf("Usage: neuralnet [optional iter count]");
